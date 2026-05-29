@@ -1,0 +1,12 @@
+IS1009d /home/teaching/aparna/processed_data/IS1009d_affinity.npy
+ES2004d /home/teaching/aparna/processed_data/ES2004d_affinity.npy
+ES2004c /home/teaching/aparna/processed_data/ES2004c_affinity.npy
+ES2004b /home/teaching/aparna/processed_data/ES2004b_affinity.npy
+EN2002a /home/teaching/aparna/processed_data/EN2002a_affinity.npy
+IS1009c /home/teaching/aparna/processed_data/IS1009c_affinity.npy
+IS1009b /home/teaching/aparna/processed_data/IS1009b_affinity.npy
+EN2002d /home/teaching/aparna/processed_data/EN2002d_affinity.npy
+EN2002b /home/teaching/aparna/processed_data/EN2002b_affinity.npy
+IS1009a /home/teaching/aparna/processed_data/IS1009a_affinity.npy
+EN2002c /home/teaching/aparna/processed_data/EN2002c_affinity.npy
+ES2004a /home/teaching/aparna/processed_data/ES2004a_affinity.npy

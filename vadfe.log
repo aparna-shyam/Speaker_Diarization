@@ -1,6 +1,0 @@
-nohup: ignoring input
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading model on device: cpu...
-Extracting Audio Speaker Profiles:   0%|          | 0/12 [00:00<?, ?it/s]Extracting Audio Speaker Profiles:   8%|▊         | 1/12 [01:10<12:55, 70.46s/it]Extracting Audio Speaker Profiles:  17%|█▋        | 2/12 [02:28<12:29, 74.92s/it]Extracting Audio Speaker Profiles:  25%|██▌       | 3/12 [03:59<12:21, 82.34s/it]Extracting Audio Speaker Profiles:  33%|███▎      | 4/12 [05:43<12:07, 90.95s/it]Extracting Audio Speaker Profiles:  42%|████▏     | 5/12 [06:52<09:39, 82.84s/it]Extracting Audio Speaker Profiles:  50%|█████     | 6/12 [08:06<08:00, 80.01s/it]Extracting Audio Speaker Profiles:  58%|█████▊    | 7/12 [10:09<07:49, 93.84s/it]Extracting Audio Speaker Profiles:  67%|██████▋   | 8/12 [11:12<05:36, 84.06s/it]Extracting Audio Speaker Profiles:  75%|███████▌  | 9/12 [12:25<04:01, 80.54s/it]Extracting Audio Speaker Profiles:  83%|████████▎ | 10/12 [13:02<02:14, 67.39s/it]Extracting Audio Speaker Profiles:  92%|█████████▏| 11/12 [14:31<01:13, 73.87s/it]Extracting Audio Speaker Profiles: 100%|██████████| 12/12 [14:54<00:00, 58.24s/it]Extracting Audio Speaker Profiles: 100%|██████████| 12/12 [14:54<00:00, 74.50s/it]
-
-Phase 1 Extraction Complete!

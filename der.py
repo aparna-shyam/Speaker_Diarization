@@ -1,59 +1,66 @@
 import os
-import numpy as np
-from pyannote.core import Annotation, Segment
+import glob
+from pyannote.database.util import load_rttm
 from pyannote.metrics.diarization import DiarizationErrorRate
 
-GROUND_TRUTH_DIR = "/DATA/nikhil-data/diarisation_dataset/ami_mixed/BUT_rttms/test"
-PREDICTED_RTTM = "./predicted_output.rttm"
+class Config:
+    REF_RTTM_DIR = "/DATA/nikhil-data/diarisation_dataset/ami_mixed/BUT_rttms/test"
+    HYP_RTTM_DIR = "./processed_data/cos+sc"
+    OUTPUT_REPORT = "./processed_data/final_performance_report.txt"
 
-def load_rttm(path, target_session=None):
-    annotation = Annotation()
-    if not os.path.exists(path): return annotation
-    with open(path, "r") as f:
-        for line in f:
-            parts = line.strip().split()
-            if not parts or parts[0] != "SPEAKER": continue
-            session_id = parts[1]
-            if target_session and session_id != target_session: continue
-            start, duration, speaker = float(parts[3]), float(parts[4]), parts[7]
-            annotation[Segment(start, start + duration)] = speaker
-    return annotation
-
-def main():
-    if not os.path.exists(PREDICTED_RTTM):
-        print(f"[ERROR] Output path {PREDICTED_RTTM} missing.")
-        return
-
-    predicted_sessions = set()
-    with open(PREDICTED_RTTM, 'r') as f:
-        for line in f:
-            parts = line.strip().split()
-            if parts: predicted_sessions.add(parts[1])
-            
-    # Configured parameter alignment: skip overlap calculation with an explicit 0.25s evaluation collar
-    metric = DiarizationErrorRate(skip_overlap=True, collar=0.25)
-    der_scores = []
+def evaluate_rttms():   
+    print(f"Loading Reference RTTMs from: {Config.REF_RTTM_DIR}")
+    print(f"Loading Hypothesis RTTMs from: {Config.HYP_RTTM_DIR}\n")
     
-    print("\nEvaluating Track Alignments against Reference Metadata Matrix...")
-    print("-" * 65)
-    for session in sorted(list(predicted_sessions)):
-        gt_file = os.path.join(GROUND_TRUTH_DIR, f"{session}.rttm")
-        if not os.path.exists(gt_file): continue
-            
-        ref = load_rttm(gt_file, target_session=session)
-        hyp = load_rttm(PREDICTED_RTTM, target_session=session)
+    ref_files = glob.glob(os.path.join(Config.REF_RTTM_DIR, "*.rttm"))
+    if not ref_files:
+        print("[ERROR] No reference RTTM targets found.")
+        return
         
-        if len(ref) == 0 or len(hyp) == 0: continue
-            
-        session_der = metric(ref, hyp, file_index=session)
-        der_percentage = abs(session_der) * 100
-        der_scores.append(der_percentage)
-        print(f" -> Meeting ID: {session:10} | Diarization Error Rate (DER): {der_percentage:.2f}%")
+    metric = DiarizationErrorRate(skip_overlap=True, collar=0.25)
+    evaluated_files = 0
+    
+    for ref_file in sorted(ref_files):
+        basename = os.path.basename(ref_file)
+        stem = os.path.splitext(basename)[0]
+        hyp_file = os.path.join(Config.HYP_RTTM_DIR, basename)
         
-    global_average_der = np.mean(der_scores) if der_scores else 0.0
-    print("\n" + "="*65)
-    print(f" FINAL AVERAGE DIARIZATION ERROR RATE (DER): {global_average_der:.2f}%")
-    print("="*65 + "\n")
+        if not os.path.exists(hyp_file):
+            continue
+            
+        try:
+            ref_dict = load_rttm(ref_file)
+            hyp_dict = load_rttm(hyp_file)
+            
+            if not ref_dict or not hyp_dict:
+                continue
+                
+            ref_uri = list(ref_dict.keys())[0]
+            hyp_uri = list(hyp_dict.keys())[0]
+            
+            file_der = metric(ref_dict[ref_uri], hyp_dict[hyp_uri])
+            print(f" -> URI Session ID: {stem:12} | Measured File DER: {abs(file_der):.2%}")
+            evaluated_files += 1
+        except Exception as e:
+            print(f"[ERROR] Track skipped {stem}: {str(e)}")
+            
+    if evaluated_files == 0:
+        print("[ERROR] No valid overlapping matching pairs found.")
+        return
+        
+    print("\n" + "="*60)
+    print(" COMPREHENSIVE SYSTEM PERFORMANCE EVALUATION")
+    print("="*60)
+    
+    overall_der = abs(metric)
+    print(f" GLOBAL AVG DIARIZATION ERROR RATE (DER): {overall_der:.2%}\n")
+    metric.report(display=True)
+    
+    if Config.OUTPUT_REPORT:
+        os.makedirs(os.path.dirname(Config.OUTPUT_REPORT), exist_ok=True)
+        with open(Config.OUTPUT_REPORT, "w") as f:
+            f.write(f"GLOBAL AVG DIARIZATION ERROR RATE (DER): {overall_der:.2%}\n\n")
+            f.write(metric.report().to_string())
 
 if __name__ == "__main__":
-    main()
+    evaluate_rttms()

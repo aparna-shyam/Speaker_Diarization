@@ -186,9 +186,9 @@ if __name__ == "__main__":
     parser.add_argument("--out_dir", type=str, default="./processed_data")
     
     # 2% DER Target Settings: Optimized Fine-Grained Windows
-    parser.add_argument("--max_seg_len", type=float, default=2.0)
+    parser.add_argument("--max_seg_len", type=float, default=1.5)
     parser.add_argument("--min_seg_len", type=float, default=0.5)
-    parser.add_argument("--hop_size", type=float, default=0.5)
+    parser.add_argument("--hop_size", type=float, default=0.75)
     
     args = parser.parse_args()
     extract_features(args)

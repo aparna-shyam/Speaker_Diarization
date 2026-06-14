@@ -546,10 +546,10 @@ def parse_args():
         description="NME-SC speaker diarization clustering "
                     "(tango4j/Auto-Tuning-Spectral-Clustering)")
 
-    p.add_argument("--embeddings_dir", default="/home/teaching/spkdia/output_ami_split/xvector_embeddings",
+    p.add_argument("--embeddings_dir", default="./output_ami_split/gnn_embeddings",
                    help="Directory containing *_embeddings.npz and "
                         "*_metadata.json files.")
-    p.add_argument("--output_dir", default="./output_ami_split/cos+sc",
+    p.add_argument("--output_dir", default="./output_ami_split/gnn+sc",
                    help="Directory to write label/RTTM files.")
     p.add_argument("--max_speaker", type=int, default=25,
                    help="Maximum number of speakers (default: 8).")

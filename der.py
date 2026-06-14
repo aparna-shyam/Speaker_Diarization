@@ -5,8 +5,8 @@ from pyannote.metrics.diarization import DiarizationErrorRate
 
 class Config:
     REF_RTTM_DIR = "/DATA/nikhil-data/diarisation_dataset/ami_mixed/BUT_rttms/test"
-    HYP_RTTM_DIR = "/home/teaching/spkdia/output_ami_split/cos+sc"
-    OUTPUT_REPORT = "./output_ami_split/final_performance_report.txt"
+    HYP_RTTM_DIR = "./output_ami_split/gnn+sc"
+    OUTPUT_REPORT = "./output_ami_split/final_performance_report_gnn.txt"
 
 def evaluate_rttms():   
     print(f"Loading Reference RTTMs from: {Config.REF_RTTM_DIR}")

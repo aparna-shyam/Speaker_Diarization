@@ -193,26 +193,26 @@ def extract_features(args):
                 print(f"  Saved {len(embeddings_list)} x-vectors {embeddings.shape} -> {out_npz_path}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Extract X-vector (512-dim) embeddings using RTTM files.")
-    parser.add_argument("--model_dir", type=str,
-                        default="./xvec",
-                        help="HuggingFace hub ID or local path for the SpeechBrain x-vector model.")
-    parser.add_argument("--audio_dir", type=str,
-                        default="/DATA/nikhil-data/diarisation_dataset/ami_mixed/split_audio/test")
-    parser.add_argument("--rttm_dir",  type=str,
-                        default="/DATA/nikhil-data/diarisation_dataset/ami_mixed/BUT_rttms/test")
-    parser.add_argument("--out_dir",   type=str,
-                        default="./output_ami_split/xvector_embeddings")
+    # ── Change SPLIT here to switch between train and test ──────────────────
+    SPLIT = "test"   # "train" or "test"
+    # ────────────────────────────────────────────────────────────────────────
 
-    # Sliding window parameters
-    parser.add_argument("--max_seg_len", type=float, default=1.5,
-                        help="Maximum segment length in seconds.")
-    parser.add_argument("--min_seg_len", type=float, default=0.5,
-                        help="Minimum segment length in seconds.")
-    parser.add_argument("--hop_size",    type=float, default=0.75,
-                        help="Hop size in seconds for sliding window.")
-    parser.add_argument("--batch_size",  type=int,   default=64,
-                        help="Batch size for GPU extraction (reserved for future batched inference).")
-    
+    BASE = "/DATA/nikhil-data/diarisation_dataset/ami_mixed"
+    OUT  = "./output_ami_split"
+
+    parser = argparse.ArgumentParser(description="Extract X-vector (512-dim) embeddings using RTTM files.")
+    parser.add_argument("--model_dir",   type=str,   default="./xvec")
+    parser.add_argument("--audio_dir",   type=str,   default=f"{BASE}/split_audio/{SPLIT}")
+    parser.add_argument("--rttm_dir",    type=str,   default=f"{BASE}/BUT_rttms/{SPLIT}")
+    parser.add_argument("--out_dir",     type=str,   default=f"{OUT}/xvector_embeddings_{SPLIT}")
+    parser.add_argument("--max_seg_len", type=float, default=1.5)
+    parser.add_argument("--min_seg_len", type=float, default=0.5)
+    parser.add_argument("--hop_size",    type=float, default=0.75)
+    parser.add_argument("--batch_size",  type=int,   default=64)
+
     args = parser.parse_args()
+    print(f"Split    : {SPLIT}")
+    print(f"audio_dir: {args.audio_dir}")
+    print(f"rttm_dir : {args.rttm_dir}")
+    print(f"out_dir  : {args.out_dir}\n")
     extract_features(args)
